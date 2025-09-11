@@ -1,6 +1,11 @@
-import React from "react";
+import React,{useState} from "react";
+import VendorEntryForm from "./Pages/Forms/VendorEntryForm";
+import CreateAgencyForm from "./Pages/Forms/CreateAgencyForm";
 
-export default function Firms() {
+
+export default function Vendor() {
+  const [vendorForm , setVendorForm] = useState(false);
+  const [agencyForm , setAgencyForm] = useState(false);
   const mockRows = [
     {
     id: 1,
@@ -75,16 +80,29 @@ export default function Firms() {
   ];
   return (
     <section className="p-4">
-      <button className="block mb-4 w-30 p-2 rounded-lg border transition-all duration-200 bg-blue-500 text-white border-blue-500 shadow-md transform scale-105">
-        Add New Firm ➕
+      {/* Buttons */}
+      <div className=" flex flex-wrap gap-6">
+      <button onClick={()=>setVendorForm(true)}
+       className="block mb-4 w-30 p-2 rounded-lg border transition-all duration-200 bg-blue-600 text-white border-blue-700 shadow-md transform scale-105">
+        Add New Vendor ➕
       </button>
+      <button onClick={()=>setAgencyForm(true)}
+       className="block mb-4 w-30 p-2 rounded-lg border transition-all duration-200 bg-blue-600 text-white border-blue-700 shadow-md transform scale-105">
+        Create New Agency ➕
+      </button>
+         </div>
+
+      {/* Vendor Entry Form */}
+      {vendorForm && <VendorEntryForm setVendorForm={setVendorForm}/>}
+      {/* Craete Vendor Agency Form */}
+      {agencyForm && <CreateAgencyForm setAgencyForm={setAgencyForm}/>}
 
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium  tracking-wider text-gray-600">
-                Sr.No
+                Vendor ID
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600">
                 Name

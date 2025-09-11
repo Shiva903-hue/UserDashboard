@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter , Routes , Route } from 'react-router-dom'
-import Firms from './Component/Firms'
+import Vendor from './Component/Vendor'
 import Account from './Component/Account'
 import Dashboard from './Component/Dashboard'
 import DailyTransiction from './Component/DailyTransiction'
@@ -12,7 +12,7 @@ export default function App() {
       <Dashboard/>
       <Routes>
         <Route path='/' element={<DailyTransiction/>} />
-        <Route path='/Firms' element={<Firms/>} />
+        <Route path='/Firms' element={<Vendor/>} />
         <Route path='/Account' element={<Account/>} />
       </Routes>
       </BrowserRouter>

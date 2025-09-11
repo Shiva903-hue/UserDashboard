@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import DebitAndCredit from './Pages/DebitAndCredit';
-import JournalVoucher from './Pages/JournalVoucher';
+import Transaction from './Pages/Transaction';
+// import JournalVoucher from './Pages/JournalVoucher';
 import StatusView from './Pages/StatusView';
+import RequestForm from './Pages/Forms/RequestForm';
 
 export default function VerticalNavbar() {
-  const [activeItem, setActiveItem] = useState('debit-credit');
+  const [activeItem, setActiveItem] = useState('Transaction');
 
   const navItems = [
-    { id: 'debit-credit', label: 'Debit & Credit', href: '#debit-credit' },
-    { id: 'jurnal-voucher', label: 'Jurnal Voucher', href: '#jurnal-voucher' },
-    { id: 'status-view', label: 'Status View', href: '#status-view' }
+    { id: 'Transaction', label: 'Transaction', href: '#Transaction' },
+    // { id: 'jurnal-voucher', label: 'Jurnal Voucher', href: '#jurnal-voucher' },
+    { id: 'VoucherForm', label: 'VoucherForm', href: '#VoucherForm' },
+    { id: 'status-view', label: 'Status View', href: '#status-view' },
   ];
 
   const handleItemClick = (itemId) => {
@@ -47,16 +49,15 @@ export default function VerticalNavbar() {
 
      
       <main className="flex-1 p-8">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+
+          {activeItem === 'Transaction' && <Transaction/> }
           
-         
-          {activeItem === 'debit-credit' && <DebitAndCredit/> }
-          
-          {activeItem === 'jurnal-voucher' && <JournalVoucher/>}
+          {/* {activeItem === 'jurnal-voucher' && <JournalVoucher/>} */}
           
           {activeItem === 'status-view' && <StatusView/>}
-        </div>
+          
+          {activeItem === 'VoucherForm' && <RequestForm/>}
+
       </main>
     </div>
   );
