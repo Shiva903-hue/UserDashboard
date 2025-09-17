@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import Transaction from './Pages/Transaction';
 // import JournalVoucher from './Pages/JournalVoucher';
 import StatusView from './Pages/StatusView';
-import RequestForm from './Pages/Forms/RequestForm';
+// import RequestForm from './Pages/Forms/RequestForm';
+import VoucherForm from './Pages/Forms/VoucherForm';
 
 export default function VerticalNavbar() {
   const [activeItem, setActiveItem] = useState('Transaction');
@@ -56,7 +57,8 @@ export default function VerticalNavbar() {
           
           {activeItem === 'status-view' && <StatusView/>}
           
-          {activeItem === 'VoucherForm' && <RequestForm/>}
+          {/* {activeItem === 'VoucherForm' && <RequestForm/>} */}
+          {activeItem === 'VoucherForm' && <VoucherForm/>}
 
       </main>
     </div>
