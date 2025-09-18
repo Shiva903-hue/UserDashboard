@@ -19,12 +19,14 @@ export default function VoucherForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Send request to backend
+    //! Send request to backend
     const res = await fetch("http://localhost:5001/api/voucher", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
+    
     });
+  console.log("Submitting formData:", formData);
 
     if (res.ok) {
       alert("✅Request sent successfully!");
@@ -32,6 +34,7 @@ export default function VoucherForm() {
         va_id: "",
         u_email: "",
         v_date: "",
+         p_name: "",
         p_rate: "",
         P_amount: "",
         P_quantity: "",

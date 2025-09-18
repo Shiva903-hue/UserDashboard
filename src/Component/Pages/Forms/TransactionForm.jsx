@@ -56,7 +56,7 @@ export default function TransactionForm() {
               type="text"
               name="Status"
               placeholder="Status"
-              value="APPROVED"
+              value="APPROVED" //! this input read-only need to use onchagehandler coz to remove err need to make it editable
               className="w-full p-3 font-bold border text-green-600 bg-green-100 border-green-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
             />

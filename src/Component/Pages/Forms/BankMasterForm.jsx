@@ -1,6 +1,44 @@
-import React from "react";
+import React ,{useState}from "react";
 
 export default function BankMasterForm() {
+
+    const [formData , setFormData] = useState({
+      	b_name:"",
+        b_accno:"",
+        b_ifsc:"",
+        city:"",
+        u_email:"",
+        // b_id:""
+    })
+
+    const handleChange = (e)=>{
+      setFormData({...formData , [e.target.name]: e.target.value})
+    }
+
+    const handleSubmit = async(e)=>{
+       e.preventDefault();
+
+       const res = await fetch("http://localhost:5001/api/bankmaster",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(formData),
+       })
+
+       if(res.ok){
+        alert(" ✅ Bank details inserted successfully")
+        setFormData({
+        b_name:"",
+        b_accno:"",
+        b_ifsc:"",
+        city:"",
+        u_email:"",
+        // b_id:""
+        })
+       }else{
+        alert("❌ error sending req")
+       }
+
+    }
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-xl">
       
@@ -9,18 +47,20 @@ export default function BankMasterForm() {
         <h2 className="text-xl font-bold text-gray-800">Add Bank Details</h2>
       </div>
 
-      <div className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* User Information */}
-        <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+        <div  className="bg-gray-50 rounded-lg p-4 space-y-4">
           <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">User Information</h3>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               User Email
             </label>
             <input 
+            onChange={handleChange}
               type="email"
-              name="userEmail"
+              name="u_email"
+              value={formData.u_email}
               placeholder="Enter User Email"
               className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
@@ -33,26 +73,30 @@ export default function BankMasterForm() {
           <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Bank Details</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Bank ID
               </label>
               <input
+              onChange={handleChange}
                 type="text"
-                name="bank_id"
+                name="b_id"
+                value={formData.b_id}
                 placeholder="Enter Bank ID"
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 required
               />
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Bank Name
               </label>
               <input
+              onChange={handleChange}
                 type="text"
-                name="bank_name"
+                name="b_name"
+                value={formData.b_name}
                 placeholder="Enter Bank Name"
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 required
@@ -65,8 +109,10 @@ export default function BankMasterForm() {
               Bank Account Number
             </label>
             <input
+            onChange={handleChange}
               type="text"
-              name="bank_account"
+              name="b_accno"
+              value={formData.b_accno}
               placeholder="Enter Bank Account Number"
               className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               required
@@ -79,8 +125,10 @@ export default function BankMasterForm() {
                 IFSC Code
               </label>
               <input
+              onChange={handleChange}
                 type="text"
-                name="bank_ifsc"
+                name="b_ifsc"
+                value={formData.b_ifsc}
                 placeholder="Enter IFSC Code"
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 required
@@ -92,8 +140,10 @@ export default function BankMasterForm() {
                 Bank Branch
               </label>
               <input
+              onChange={handleChange}
                 type="text"
-                name="bank_branch"
+                name="city"
+                value={formData.city}
                 placeholder="Enter Bank Branch"
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                 required
@@ -111,7 +161,7 @@ export default function BankMasterForm() {
             Add Bank Details
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
