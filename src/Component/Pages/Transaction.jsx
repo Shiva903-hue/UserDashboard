@@ -4,7 +4,7 @@ import TransactionForm from './Forms/TransactionForm'
 export default function Transaction() {
   return (
     <div>
-     <div className="max-w-4xl mx-auto">
+     <div className="max-w-full mx-auto">
          
          <TransactionForm/>
     </div>

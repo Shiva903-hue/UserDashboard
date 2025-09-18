@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Deposit from './Pages/Forms/Deposit';
 import BankMasterForm from './Pages/Forms/BankMasterForm';
+import WithdrawalForm from './Pages/WithdrawalForm';
 
 export default function Account() {
   const [activeItem, setActiveItem] = useState('Create_Bank');
@@ -8,6 +9,7 @@ export default function Account() {
   const navItems = [
     { id: 'Create_Bank', label: 'Create Bank', href: '#BankForm' },
     { id: 'Deposit', label: 'Deposit', href: '#Deposit' },
+    { id: 'Withdrawal', label: 'Withdrawal', href: '#Withdrawal' },
   ];
 
   const handleItemClick = (itemId) => {
@@ -44,11 +46,13 @@ export default function Account() {
       </section>
 
      
-      <main className="flex-1 p-8">
+      <main className="flex-1 p-2">
 
           {activeItem === 'Create_Bank' && <BankMasterForm/>}
 
           {activeItem === 'Deposit' && <Deposit/> }
+
+          {activeItem === 'Withdrawal' && <WithdrawalForm/> }
 
       </main>
     </div>

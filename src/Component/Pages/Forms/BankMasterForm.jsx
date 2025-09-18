@@ -40,128 +40,103 @@ export default function BankMasterForm() {
 
     }
   return (
-    <div className="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-xl">
-      
-      {/* Header */}
-      <div className="border-b border-gray-100 pb-4 mb-6">
-        <h2 className="text-xl font-bold text-gray-800">Add Bank Details</h2>
+   <div className="w-full px-4 md:px-12 bg-white p-6 rounded-2xl shadow-xl">
+  {/* Header */}
+  <div className="border-b border-gray-100 pb-4 mb-6">
+    <h2 className="text-2xl font-bold text-gray-800">Add Bank Details</h2>
+  </div>
+
+  <form onSubmit={handleSubmit} className="space-y-6">
+    {/* User Information */}
+    <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+      <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">User Information</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">User Email</label>
+          <input
+            onChange={handleChange}
+            type="email"
+            name="u_email"
+            value={formData.u_email}
+            placeholder="Enter User Email"
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            required
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* Bank Information */}
+    <div className="bg-gray-50 rounded-lg p-4 space-y-4">
+      <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Bank Details</h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
+          <input
+            onChange={handleChange}
+            type="text"
+            name="b_name"
+            value={formData.b_name}
+            placeholder="Enter Bank Name"
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Bank Account Number</label>
+          <input
+            onChange={handleChange}
+            type="text"
+            name="b_accno"
+            value={formData.b_accno}
+            placeholder="Enter Bank Account Number"
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            required
+          />
+        </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        
-        {/* User Information */}
-        <div  className="bg-gray-50 rounded-lg p-4 space-y-4">
-          <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">User Information</h3>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              User Email
-            </label>
-            <input 
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">IFSC Code</label>
+          <input
             onChange={handleChange}
-              type="email"
-              name="u_email"
-              value={formData.u_email}
-              placeholder="Enter User Email"
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              required
-            />
-          </div>
+            type="text"
+            name="b_ifsc"
+            value={formData.b_ifsc}
+            placeholder="Enter IFSC Code"
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            required
+          />
         </div>
 
-        {/* Bank Information */}
-        <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-          <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Bank Details</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Bank ID
-              </label>
-              <input
-              onChange={handleChange}
-                type="text"
-                name="b_id"
-                value={formData.b_id}
-                placeholder="Enter Bank ID"
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div> */}
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Bank Name
-              </label>
-              <input
-              onChange={handleChange}
-                type="text"
-                name="b_name"
-                value={formData.b_name}
-                placeholder="Enter Bank Name"
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Bank Account Number
-            </label>
-            <input
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Bank Branch</label>
+          <input
             onChange={handleChange}
-              type="text"
-              name="b_accno"
-              value={formData.b_accno}
-              placeholder="Enter Bank Account Number"
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                IFSC Code
-              </label>
-              <input
-              onChange={handleChange}
-                type="text"
-                name="b_ifsc"
-                value={formData.b_ifsc}
-                placeholder="Enter IFSC Code"
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Bank Branch
-              </label>
-              <input
-              onChange={handleChange}
-                type="text"
-                name="city"
-                value={formData.city}
-                placeholder="Enter Bank Branch"
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                required
-              />
-            </div>
-          </div>
+            type="text"
+            name="city"
+            value={formData.city}
+            placeholder="Enter Bank Branch"
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            required
+          />
         </div>
-
-        {/* Submit Button */}
-        <div className="pt-4">
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all font-medium shadow-sm"
-          >
-            Add Bank Details
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
+
+    {/* Submit Button */}
+    <div className="pt-4">
+      <button
+        type="submit"
+        className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all font-medium shadow-sm"
+      >
+        Add Bank Details
+      </button>
+    </div>
+  </form>
+</div>
   );
 }
