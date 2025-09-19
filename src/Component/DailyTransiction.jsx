@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import Transaction from './Pages/Transaction';
-// import JournalVoucher from './Pages/JournalVoucher';
 import StatusView from './Pages/StatusView';
-// import RequestForm from './Pages/Forms/RequestForm';
 import VoucherForm from './Pages/Forms/VoucherForm';
 
 export default function VerticalNavbar() {
-  const [activeItem, setActiveItem] = useState('Transaction');
+  const [activeItem, setActiveItem] = useState('VoucherForm');
 
   const navItems = [
+    { id: 'VoucherForm', label: 'VoucherForm', href: '#VoucherForm' },
     { id: 'Transaction', label: 'Transaction', href: '#Transaction' },
     // { id: 'jurnal-voucher', label: 'Jurnal Voucher', href: '#jurnal-voucher' },
-    { id: 'VoucherForm', label: 'VoucherForm', href: '#VoucherForm' },
     { id: 'status-view', label: 'Status View', href: '#status-view' },
   ];
 

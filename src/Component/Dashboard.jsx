@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {
-  const [activeItem, setActiveItem] = useState("DailyTransiction");
+  const [activeItem, setActiveItem] = useState("DailyExpenses");
 
   const handleItemClick = (itemId) => {
     setActiveItem(itemId);
@@ -12,16 +12,16 @@ export default function Dashboard() {
       <nav className="bg-white shadow-lg border-b w-full flex gap-3 justify-center p-4">
         <Link
           to="/"
-          onClick={() => handleItemClick("DailyTransiction")}
+          onClick={() => handleItemClick("DailyExpenses")}
         >
           <button
             className={`p-3 border rounded-lg transition-all duration-200 ${
-              activeItem === "DailyTransiction"
+              activeItem === "DailyExpenses"
                 ? "bg-blue-500 text-white border-blue-500 shadow-md transform scale-105"
                 : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50 hover:border-gray-400 hover:shadow-sm"
             }`}
           >
-            Daily Transaction
+            Daily Expenses
           </button>
         </Link>
 
