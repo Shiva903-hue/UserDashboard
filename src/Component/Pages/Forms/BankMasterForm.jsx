@@ -71,6 +71,20 @@ export default function BankMasterForm() {
       <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Bank Details</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+         <div>
+              <label className="block text-sm font-medium text-red-500 mb-1">
+                Bank ID
+              </label>
+              <input
+              onChange={handleChange}
+                type="text"
+                name="b_id"
+                value={formData.b_id}
+                placeholder="Enter Bank ID"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                required
+              />
+            </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Bank Name</label>
           <input

@@ -5,13 +5,10 @@ export default function WithdrawalForm() {
   const [bank, setBank] = useState("");
   const [chequeDetails, setChequeDetails] = useState({
     number: "",
-    account: "",
-  });
-  const [ddDetails, setDdDetails] = useState({
-    number: "",
-    date: "",
     amount: "",
+    date:""
   });
+  
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">
@@ -128,17 +125,18 @@ export default function WithdrawalForm() {
                     required
                   />
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Account Number
+                    Date
                   </label>
                   <input
-                    type="text"
-                    value={chequeDetails.account}
+                    type="date"
+                    value={chequeDetails.date}
                     onChange={(e) =>
                       setChequeDetails({
                         ...chequeDetails,
-                        account: e.target.value,
+                        date: e.target.value,
                       })
                     }
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -147,56 +145,6 @@ export default function WithdrawalForm() {
                 </div>
               </div>
             )}
-
-            {/* DD Section */}
-            <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
-                DD
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    DD Number
-                  </label>
-                  <input
-                    type="text"
-                    value={ddDetails.number}
-                    onChange={(e) =>
-                      setDdDetails({ ...ddDetails, number: e.target.value })
-                    }
-                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    DD Date
-                  </label>
-                  <input
-                    type="date"
-                    value={ddDetails.date}
-                    onChange={(e) =>
-                      setDdDetails({ ...ddDetails, date: e.target.value })
-                    }
-                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    DD Amount
-                  </label>
-                  <input
-                    type="number"
-                    value={ddDetails.amount}
-                    onChange={(e) =>
-                      setDdDetails({ ...ddDetails, amount: e.target.value })
-                    }
-                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-              </div>
-            </div>
 
             {/* Submit Button */}
             <div className="pt-4">

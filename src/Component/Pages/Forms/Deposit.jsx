@@ -1,13 +1,24 @@
 import React, { useState } from 'react';
 
 export default function Deposit() {
+  const [totalAmount, setTotalAmount] = useState(0);
   const [mode, setMode] = useState('');
   const [bank, setBank] = useState('');
   const [cashNotes, setCashNotes] = useState({
     '2000': '', '500': '', '200': '', '100': '', '50': '', '20': '', '10': ''
   });
-  const [chequeDetails, setChequeDetails] = useState({ number: '', account: '' });
+  const [chequeDetails, setChequeDetails] = useState({ number: '', amount: '' , date:''});
   const [ddDetails, setDdDetails] = useState({ number: '', date: '', amount: '' });
+
+  //Denomination calculation
+  const handleDenomination = (updatedNotes) => {
+    let total = 0;
+    Object.entries(updatedNotes).forEach(([note, count]) => {
+      const quantity = parseInt(count) || 0;
+      total += quantity * parseInt(note);
+    });
+    setTotalAmount(total);
+  };
 
   return (
     <div className="p-6 min-h-screen bg-gray-50">
@@ -109,15 +120,24 @@ export default function Deposit() {
                       <input
                         type="number"
                         value={cashNotes[note]}
-                        onChange={(e) =>
-                          setCashNotes({ ...cashNotes, [note]: e.target.value })
-                        }
+                        onChange={(e) => {
+                          const updatedNotes = { ...cashNotes, [note]: e.target.value };
+                          setCashNotes(updatedNotes);
+                          handleDenomination(updatedNotes);
+                        }}
                         className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         required
                         min="0"
                       />
                     </div>
                   ))}
+                </div>
+
+                <div className="pt-2 flex flex-col flex-wrap ">
+                  
+                    <strong>Total </strong> 
+                    <span className='p-4 w-60 font-bold bg-green-200 rounded-lg border border-green-600'>₹  {totalAmount}</span>
+                  
                 </div>
               </div>
             )}
@@ -137,13 +157,14 @@ export default function Deposit() {
                     required
                   />
                 </div>
+                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Number</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
                   <input
-                    type="text"
-                    value={chequeDetails.account}
+                    type="date"
+                    value={chequeDetails.date}
                     onChange={(e) =>
-                      setChequeDetails({ ...chequeDetails, account: e.target.value })
+                      setChequeDetails({ ...chequeDetails, date: e.target.value })
                     }
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
@@ -151,11 +172,43 @@ export default function Deposit() {
                 </div>
               </div>
             )}
+
+            {/* RTGS Details */}
+            {mode === 'RTGS' && (
+              <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Cheque Number</label>
+                  <input
+                    type="text"
+                    value={chequeDetails.number}
+                    onChange={(e) =>
+                      setChequeDetails({ ...chequeDetails, number: e.target.value })
+                    }
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  />
+                </div>
+                 
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                  <input
+                    type="date"
+                    value={chequeDetails.date}
+                    onChange={(e) =>
+                      setChequeDetails({ ...chequeDetails, date: e.target.value })
+                    }
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
           </div>
 
-          {/* DD Section */}
+          {/* Demand Draft Section */}
           <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-            <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">DD</h3>
+            <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Demand Draft</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">DD Number</label>
@@ -196,17 +249,17 @@ export default function Deposit() {
           </div>
 
           {/* Submit Button */}
-           <div className="pt-4">
-           <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all font-medium shadow-sm"
-          >
-            Apply Deposit
-          </button>
+          <div className="pt-4">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all font-medium shadow-sm"
+            >
+              Apply Deposit
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
-  </div>
-// </div>
   );
 }

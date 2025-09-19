@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Deposit from './Pages/Forms/Deposit';
 import BankMasterForm from './Pages/Forms/BankMasterForm';
-import WithdrawalForm from './Pages/WithdrawalForm';
+import WithdrawalForm from './Pages/Forms/WithdrawalForm';
 
 export default function Account() {
   const [activeItem, setActiveItem] = useState('Create_Bank');
