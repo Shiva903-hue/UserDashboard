@@ -50,20 +50,19 @@ export default function CreateAgencyForm({ setAgencyForm }) {
     errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="relative w-full max-w-md bg-white p-6 rounded-2xl shadow-lg">
-        {/* Close Button */}
         <button
           type="button"
           onClick={() => setAgencyForm(false)}
-          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-1.5 transition-colors"
         >
           <X size={20} />
         </button>
 
         <h2 className="text-xl font-bold mb-4 text-gray-800">Create Agency</h2>
 
-        <div className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Vendor Type <span className="text-red-500">*</span>
@@ -71,8 +70,8 @@ export default function CreateAgencyForm({ setAgencyForm }) {
             <input
               type="text"
               name="V_type"
-              placeholder="Vendor Type"
-              className="w-full p-2 border rounded"
+              placeholder="e.g., Electronics, Textiles"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
               required
               onChange={handleChange}
               value={formData.V_type || ""}
@@ -87,8 +86,8 @@ export default function CreateAgencyForm({ setAgencyForm }) {
             <input
               type="text"
               name="V_name"
-              placeholder="Vendor Name"
-              className="w-full p-2 border rounded"
+              placeholder="e.g., Kumar Book Store"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
               required
               onChange={handleChange}
               value={formData.V_name || ""}
@@ -96,14 +95,15 @@ export default function CreateAgencyForm({ setAgencyForm }) {
             {renderError("V_name")}
           </div>
 
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Create Agency
-          </button>
-        </div>
+          <div className="pt-2">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 transition font-medium"
+            >
+              Create Agency
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

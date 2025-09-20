@@ -2,24 +2,40 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 
 export default function VendorEntryForm({ setVendorForm }) {
-  const [formData, setFormData] = useState({});
-  const [errors, setErrors] = useState({});
 
-  const validateField = (name, value, type) => {
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState({
+    u_email: "",
+    v_id: "",
+    v_name: "",
+    v_GSTno: "",
+    v_email: "",
+    phone_no: "",
+    v_address: "",
+    v_detail: "",
+    f_owner: "",
+    f_manager: "",
+    b_name: "",
+    b_accno: "",
+    b_ifsc: "",
+  });
+
+
+  const validateField = (name, value) => {
     let error = "";
 
     if (!value) {
       error = "This field is required";
     } else {
-      if (type === "number" && !/^\d+$/.test(value)) {
+      if (["v_id", "phone_no", "b_accno"].includes(name) && !/^\d+$/.test(value)) {
         error = "Only numbers are allowed";
       }
-      if (name.toLowerCase().includes("name") || name === "Owner" || name === "Manager") {
-        if (!/^[a-zA-Z\s]+$/.test(value)) {
-          error = "Only alphabets are allowed";
-        }
+      if (
+        ["v_name", "f_owner", "f_manager", "b_name"].includes(name) && !/^[a-zA-Z\s]+$/.test(value)
+      ) {
+        error = "Only alphabets are allowed";
       }
-      if (name.toLowerCase().includes("phone")) {
+      if (name === "phone_no") {
         if (!/^\d{10}$/.test(value)) {
           error = "Enter a valid 10-digit number";
         }
@@ -30,18 +46,19 @@ export default function VendorEntryForm({ setVendorForm }) {
     return error === "";
   };
 
+  //* handle chnage 
   const handleChange = (e) => {
-    const { name, value, type } = e.target;
+    const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    validateField(name, value, type);
+    validateField(name, value);
   };
 
-  const handleSubmit = (e) => {
+  //* handle submit
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let isValid = true;
     Object.entries(formData).forEach(([name, value]) => {
-      const inputType = typeof value === "number" ? "number" : "text";
-      if (!validateField(name, value, inputType)) {
+      if (!validateField(name, value)) {
         isValid = false;
       }
     });
@@ -51,54 +68,96 @@ export default function VendorEntryForm({ setVendorForm }) {
       return;
     }
 
-    console.log("Submitting:", formData);
-    alert("✅ Vendor created successfully!");
+    try {
+      console.log("Submitting:", formData);
+
+      const res = await fetch("http://localhost:5001/api/vendorentry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      
+      if (res.ok) {
+        alert("✅ Vendor created successfully!");
+        setFormData({
+          u_email: "",
+          v_id: "",
+          v_name: "",
+          v_GSTno: "",
+          v_email: "",
+          phone_no: "",
+          v_address: "",
+          v_detail: "",
+          f_owner: "",
+          f_manager: "",
+          b_name: "",
+          b_accno: "",
+          b_ifsc: "",
+        });
+        setErrors({});
+        setVendorForm(false); //? Close the form after successful submission
+      } else {
+        alert("❌ Error sending request");
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      alert("❌ An error occurred while submitting the form.");
+    }
   };
 
   const renderError = (name) =>
     errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 p-4">
-      <div className="relative w-full max-w-2xl max-h-[95vh] bg-white rounded-2xl shadow-xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">Create Vendor</h2>
+        <div className="flex-shrink-0 rounded-lg bg-white border-b border-gray-100 px-4 sm:px-6 py-4 flex items-center justify-between">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+            Create Vendor
+          </h2>
           <button
             type="button"
             onClick={() => setVendorForm(false)}
-            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-1 transition-colors"
+            className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-1.5 transition-colors"
           >
             <X size={20} />
           </button>
         </div>
 
-        {/* Form Content */}
-        <div className="px-6 pb-6 max-h-[calc(95vh-80px)] overflow-y-auto">
-          <div className="space-y-4 pt-2">
+        {/* Form Content - Now scrollable */}
+        <form
+          onSubmit={handleSubmit}
+          className=" rounded-[22px] flex-grow overflow-y-auto"
+        >
+          <div className="px-4 sm:px-6 py-4 space-y-4">
             {/* User Information */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">User Information</h3>
+              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                User Information
+              </h3>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   User Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
-                  name="userEmail"
+                  name="u_email"
                   placeholder="Enter User Email"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   required
                   onChange={handleChange}
-                  value={formData.userEmail || ""}
+                  value={formData.u_email}
                 />
-                {renderError("userEmail")}
+                {renderError("u_email")}
               </div>
             </div>
 
             {/* Vendor Details */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Vendor Details</h3>
+              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                Vendor Details
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -106,14 +165,14 @@ export default function VendorEntryForm({ setVendorForm }) {
                   </label>
                   <input
                     type="text"
-                    name="V_id"
+                    name="v_id"
                     placeholder="Vendor ID"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.V_id || ""}
+                    value={formData.v_id}
                   />
-                  {renderError("V_id")}
+                  {renderError("v_id")}
                 </div>
 
                 <div>
@@ -122,14 +181,14 @@ export default function VendorEntryForm({ setVendorForm }) {
                   </label>
                   <input
                     type="text"
-                    name="V_name"
+                    name="v_name"
                     placeholder="Vendor Name"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.V_name || ""}
+                    value={formData.v_name}
                   />
-                  {renderError("V_name")}
+                  {renderError("v_name")}
                 </div>
               </div>
 
@@ -139,20 +198,37 @@ export default function VendorEntryForm({ setVendorForm }) {
                 </label>
                 <input
                   type="text"
-                  name="GST_no"
+                  name="v_GSTno"
                   placeholder="Enter GST Number"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   required
                   onChange={handleChange}
-                  value={formData.GST_no || ""}
+                  value={formData.v_GSTno}
                 />
-                {renderError("GST_no")}
+                {renderError("v_GSTno")}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Vendor Detail
+                </label>
+                <textarea
+                  name="v_detail"
+                  placeholder="Enter Vendor Details (Optional)"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  rows="3"
+                  onChange={handleChange}
+                  value={formData.v_detail}
+                />
+                {renderError("v_detail")}
               </div>
             </div>
 
             {/* Contact Information */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Contact Information</h3>
+              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                Contact Information
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -160,14 +236,14 @@ export default function VendorEntryForm({ setVendorForm }) {
                   </label>
                   <input
                     type="email"
-                    name="V_email"
+                    name="v_email"
                     placeholder="Enter Vendor Email"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.V_email || ""}
+                    value={formData.v_email}
                   />
-                  {renderError("V_email")}
+                  {renderError("v_email")}
                 </div>
 
                 <div>
@@ -176,14 +252,14 @@ export default function VendorEntryForm({ setVendorForm }) {
                   </label>
                   <input
                     type="tel"
-                    name="V_phone"
+                    name="phone_no"
                     placeholder="Enter Vendor Phone"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.V_phone || ""}
+                    value={formData.phone_no}
                   />
-                  {renderError("V_phone")}
+                  {renderError("phone_no")}
                 </div>
               </div>
 
@@ -192,36 +268,54 @@ export default function VendorEntryForm({ setVendorForm }) {
                   Vendor Address <span className="text-red-500">*</span>
                 </label>
                 <textarea
-                  name="V_address"
+                  name="v_address"
                   placeholder="Enter Vendor Address"
                   className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                   rows="3"
                   required
                   onChange={handleChange}
-                  value={formData.V_address || ""}
+                  value={formData.v_address}
                 />
-                {renderError("V_address")}
+                {renderError("v_address")}
               </div>
             </div>
 
             {/* Bank Information */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Bank Details</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                Bank Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Bank Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="b_name"
+                    placeholder="Bank Name"
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    required
+                    onChange={handleChange}
+                    value={formData.b_name}
+                  />
+                  {renderError("b_name")}
+                </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Bank Account Number <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
-                    name="Bank_id"
+                    name="b_accno"
                     placeholder="Bank Account Number"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.Bank_id || ""}
+                    value={formData.b_accno}
                   />
-                  {renderError("Bank_id")}
+                  {renderError("b_accno")}
                 </div>
 
                 <div>
@@ -230,21 +324,23 @@ export default function VendorEntryForm({ setVendorForm }) {
                   </label>
                   <input
                     type="text"
-                    name="IFSC"
+                    name="b_ifsc"
                     placeholder="Bank IFSC Code"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.IFSC || ""}
+                    value={formData.b_ifsc}
                   />
-                  {renderError("IFSC")}
+                  {renderError("b_ifsc")}
                 </div>
               </div>
             </div>
 
-            {/* Company Personnel (Op) */}
+            {/* Company Personnel */}
             <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">Company Personnel (Op)</h3>
+              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                Company Personnel
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -252,14 +348,14 @@ export default function VendorEntryForm({ setVendorForm }) {
                   </label>
                   <input
                     type="text"
-                    name="Owner"
+                    name="f_owner"
                     placeholder="Firm Owner Name"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.Owner || ""}
+                    value={formData.f_owner}
                   />
-                  {renderError("Owner")}
+                  {renderError("f_owner")}
                 </div>
 
                 <div>
@@ -268,30 +364,29 @@ export default function VendorEntryForm({ setVendorForm }) {
                   </label>
                   <input
                     type="text"
-                    name="Manager"
+                    name="f_manager"
                     placeholder="Firm Manager Name"
                     className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                     required
                     onChange={handleChange}
-                    value={formData.Manager || ""}
+                    value={formData.f_manager}
                   />
-                  {renderError("Manager")}
+                  {renderError("f_manager")}
                 </div>
               </div>
             </div>
-
-            {/* Submit Button */}
-            <div className="pt-4">
-              <button
-                type="submit"
-                onClick={handleSubmit}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all font-medium shadow-sm"
-              >
-                Create Vendor
-              </button>
-            </div>
           </div>
-        </div>
+
+          {/* Sticky Footer for Submit Button */}
+          <div className="flex-shrink-0 sticky bottom-0 bg-white border-t border-gray-100 px-4 sm:px-6 py-4">
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all font-medium shadow-sm"
+            >
+              Create Vendor
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

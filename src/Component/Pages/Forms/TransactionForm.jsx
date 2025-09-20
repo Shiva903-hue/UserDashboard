@@ -1,7 +1,20 @@
 import React, { useState } from "react";
 
 export default function TransactionForm() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    userEmail: "",
+    Va_ID: "",
+    Product_Name: "",
+    Product_Amount: "",
+    Status: "APPROVED",
+    T_number: "",
+    T_type: "",
+    Transaction_details: "",
+    mode: "",
+    Vendor_Name: "",
+    T_amount: "",
+    voucherDate: ""
+  });
   const [errors, setErrors] = useState({});
 
   const validateField = (name, value, type) => {
@@ -10,7 +23,7 @@ export default function TransactionForm() {
     if (!value) {
       error = "This field is required";
     } else {
-      if (type === "number" && !/^\d+$/.test(value)) {
+      if (type === "number" && !/^\d*\.?\d*$/.test(value)) {
         error = "Only numbers are allowed";
       }
 
@@ -43,10 +56,16 @@ export default function TransactionForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     let isValid = true;
+    // Create a temporary errors object to check all fields
+    const tempErrors = {};
     Object.entries(formData).forEach(([name, value]) => {
-      const inputType = typeof value === "number" ? "number" : "text";
+      const input = document.querySelector(`[name=${name}]`);
+      const inputType = input ? input.type : 'text';
       if (!validateField(name, value, inputType)) {
         isValid = false;
+        // This is redundant as validateField already sets errors
+        // but can be useful for immediate feedback
+        tempErrors[name] = errors[name] || "This field is required";
       }
     });
 
@@ -57,16 +76,19 @@ export default function TransactionForm() {
 
     console.log("Submitting:", formData);
     alert("✅ Transaction submitted!");
+    // Optionally reset form
+    // setFormData({...initial state...});
+    // setErrors({});
   };
 
   return (
-    <div className="w-full px-4 md:px-12 bg-white p-6 rounded-2xl shadow-xl">
+    <div className="w-full px-4 md:px-8 bg-white p-6 rounded-2xl shadow-xl">
       {/* Header */}
       <div className="border-b border-gray-100 pb-4 mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Transaction Form</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gray-800">Transaction Form</h2>
       </div>
 
-      <div onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="space-y-6">
           {/* User Information */}
           <div className="bg-gray-50 rounded-lg p-4 space-y-4">
@@ -82,7 +104,9 @@ export default function TransactionForm() {
                   type="email"
                   name="userEmail"
                   placeholder="User Email"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.userEmail ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.userEmail || ""}
@@ -110,7 +134,9 @@ export default function TransactionForm() {
                   type="text"
                   name="Va_ID"
                   placeholder="Voucher ID"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.Va_ID ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.Va_ID || ""}
@@ -128,7 +154,9 @@ export default function TransactionForm() {
                   type="text"
                   name="Product_Name"
                   placeholder="Product Name"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                   className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.Product_Name ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.Product_Name || ""}
@@ -148,7 +176,9 @@ export default function TransactionForm() {
                   type="number"
                   name="Product_Amount"
                   placeholder="Product Amount"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.Product_Amount ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.Product_Amount || ""}
@@ -162,15 +192,13 @@ export default function TransactionForm() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Status <span className="text-red-500">*</span>
+                  Status
                 </label>
                 <input
                   type="text"
                   name="Status"
-                  placeholder="Status"
                   value="APPROVED"
-                  className="w-full p-3 font-bold border text-green-600 bg-green-100 border-green-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                  required
+                  className="w-full p-3 font-bold border text-green-600 bg-green-100 border-green-300 rounded-lg cursor-not-allowed"
                   readOnly
                 />
               </div>
@@ -183,7 +211,7 @@ export default function TransactionForm() {
               Transaction Details
             </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Transaction ID <span className="text-red-500">*</span>
@@ -192,7 +220,9 @@ export default function TransactionForm() {
                   type="number"
                   name="T_number"
                   placeholder="Enter Transaction ID"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                   className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.T_number ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.T_number || ""}
@@ -209,8 +239,10 @@ export default function TransactionForm() {
                 <input
                   type="text"
                   name="T_type"
-                  placeholder="Enter Transaction Type"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                  placeholder="e.g., Purchase, Payment"
+                   className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.T_type ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.T_type || ""}
@@ -220,15 +252,17 @@ export default function TransactionForm() {
                 )}
               </div>
 
-              <div>
+              <div className="md:col-span-2 lg:col-span-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Transaction Details <span className="text-red-500">*</span>
+                  Transaction Details
                 </label>
                 <textarea
                   name="Transaction_details"
                   placeholder="Enter Transaction details"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                  required
+                  rows="3"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.Transaction_details ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   onChange={handleChange}
                   value={formData.Transaction_details || ""}
                 />
@@ -240,12 +274,12 @@ export default function TransactionForm() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Mode of Deposit <span className="text-red-500">*</span>
                 </label>
-                <div className="space-y-3">
+                <div className="flex gap-6">
                   <div className="flex items-center">
                     <input
                       type="radio"
@@ -259,7 +293,7 @@ export default function TransactionForm() {
                     />
                     <label
                       htmlFor="Cash"
-                      className="ml-3 text-sm font-medium text-gray-700"
+                      className="ml-2 text-sm font-medium text-gray-700"
                     >
                       Cash
                     </label>
@@ -277,7 +311,7 @@ export default function TransactionForm() {
                     />
                     <label
                       htmlFor="Online"
-                      className="ml-3 text-sm font-medium text-gray-700"
+                      className="ml-2 text-sm font-medium text-gray-700"
                     >
                       Online
                     </label>
@@ -295,7 +329,9 @@ export default function TransactionForm() {
                 <input
                   name="Vendor_Name"
                   placeholder="Enter Vendor Name"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                   className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.Vendor_Name ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.Vendor_Name || ""}
@@ -306,9 +342,7 @@ export default function TransactionForm() {
                   </p>
                 )}
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Transaction Amount <span className="text-red-500">*</span>
@@ -317,7 +351,9 @@ export default function TransactionForm() {
                   type="number"
                   name="T_amount"
                   placeholder="Enter Transaction Amount"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                   className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.T_amount ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.T_amount || ""}
@@ -334,7 +370,9 @@ export default function TransactionForm() {
                 <input
                   type="date"
                   name="voucherDate"
-                  className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                   className={`w-full p-3 border rounded-lg focus:ring-2 transition-all ${
+                    errors.voucherDate ? "border-red-500 focus:ring-red-300" : "border-gray-200 focus:ring-blue-500"
+                  }`}
                   required
                   onChange={handleChange}
                   value={formData.voucherDate || ""}
@@ -352,14 +390,13 @@ export default function TransactionForm() {
           <div className="pt-4">
             <button
               type="submit"
-              onClick={handleSubmit}
               className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all font-medium shadow-sm"
             >
-              Submit Request
+              Submit Transaction
             </button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
