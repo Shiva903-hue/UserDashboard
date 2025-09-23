@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 
 export default function CreateAgencyForm({ setAgencyForm }) {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+      Name :"",
+    type:""
+  });
   const [errors, setErrors] = useState({});
 
   const validateField = (name, value) => {
@@ -28,7 +31,7 @@ export default function CreateAgencyForm({ setAgencyForm }) {
     validateField(name, value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     let isValid = true;
     Object.entries(formData).forEach(([name, value]) => {
@@ -42,8 +45,31 @@ export default function CreateAgencyForm({ setAgencyForm }) {
       return;
     }
 
-    console.log("Submitting:", formData);
-    alert("✅ Agency created successfully!");
+    try{
+      console.log("Submitting:", formData);
+
+      const res = await fetch("http://localhost:5001/api/venderagencey",{
+        method:"POST",
+        headers:{"content-Type":"application/json"},
+        body:JSON.stringify(formData)
+      });
+      if(res.ok){
+          alert("✅ Vendor created successfully!");
+           setFormData({ 
+     Name :"",
+    type:""
+  });
+  setErrors({});
+  setAgencyForm(false); //? Close the form after successful submission
+      }else{
+         alert("❌ Error sending request");
+      }
+    }catch(error){
+      console.error("Submission Error--> ", error)
+      alert("❌ An error occurred while submitting the form.");
+
+    }
+
   };
 
   const renderError = (name) =>
@@ -65,34 +91,34 @@ export default function CreateAgencyForm({ setAgencyForm }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Vendor Type <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="V_type"
-              placeholder="e.g., Electronics, Textiles"
-              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-              required
-              onChange={handleChange}
-              value={formData.V_type || ""}
-            />
-            {renderError("V_type")}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
               Vendor Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
-              name="V_name"
+              name="Name"
               placeholder="e.g., Kumar Book Store"
               className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
               required
               onChange={handleChange}
-              value={formData.V_name || ""}
+              value={formData.Name || ""}
             />
-            {renderError("V_name")}
+            {renderError("Name")}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Vendor type <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              name="type"
+              placeholder="e.g., Electronics, Textiles"
+              className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+              required
+              onChange={handleChange}
+              value={formData.type || ""}
+            />
+            {renderError("type")}
           </div>
 
           <div className="pt-2">
