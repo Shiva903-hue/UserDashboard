@@ -13,7 +13,7 @@ export default function VoucherForm() {
     P_quantity: "",
     mobile: "",
     Vendor_Name: "",
-    vandro_ID: "",
+    vender_id: "",
     v_status: false,
   });
 
@@ -50,6 +50,53 @@ export default function VoucherForm() {
   };
 
   //? Handle vendor chnages
+  // const handleVendorChange = (e) => {
+  //   const selectedName = e.target.value;
+
+  //   const selectedVendor = vendorDetails.find(
+  //     (vendor) => vendor.v_name.toString() === selectedName
+  //   );
+
+  //   if (selectedVendor) {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       	vender_id: selectedVendor.vender_id,
+  //       Vendor_Name: selectedName,
+  //     }));
+  //     setErrors((prev) => ({ ...prev, vender_id: "", Vendor_Name: "" }));
+  //   } else {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       	vender_id: "",
+  //       Vendor_Name: selectedName,
+  //     }));
+  //   }
+  // };
+
+  // Handle vendor changes
+  // const handleVendorChange = (e) => {
+  //   const selectedId = e.target.value;
+
+  //   const selectedVendor = vendorDetails.find(
+  //     (vendor) => vendor.v_id.toString() === selectedId
+  //   );
+
+  //   if (selectedVendor) {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       vender_id: selectedVendor.v_id, // store ID
+  //       Vendor_Name: selectedVendor.v_name, // store Name
+  //     }));
+  //     setErrors((prev) => ({ ...prev, vender_id: "", Vendor_Name: "" }));
+  //   } else {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       vender_id: "",
+  //       Vendor_Name: "",
+  //     }));
+  //   }
+  // };
+
   const handleVendorChange = (e) => {
     const selectedId = e.target.value;
 
@@ -60,16 +107,10 @@ export default function VoucherForm() {
     if (selectedVendor) {
       setFormData((prevData) => ({
         ...prevData,
-        vandro_ID: selectedId,
-        Vendor_Name: selectedVendor.v_name,
+        vender_id: selectedVendor.v_id, // ✅ store vendor ID (for backend)
+        Vendor_Name: selectedVendor.v_name, // optional (display only)
       }));
-      setErrors((prev) => ({ ...prev, vandro_ID: "", Vendor_Name: "" }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        vandro_ID: selectedId,
-        Vendor_Name: "",
-      }));
+      setErrors((prev) => ({ ...prev, vender_id: "" }));
     }
   };
 
@@ -109,7 +150,7 @@ export default function VoucherForm() {
           P_quantity: "",
           mobile: "",
           Vendor_Name: "",
-          vandro_ID: "",
+          vender_id: "",
           v_status: false,
         });
         setErrors({});
@@ -120,6 +161,7 @@ export default function VoucherForm() {
       console.error("Submission failed:", error);
       alert("A network error occurred during submission.");
     }
+    console.log("Submitting formData:", formData);
   };
 
   // --- VALIDATION LOGIC ---
@@ -129,13 +171,10 @@ export default function VoucherForm() {
 
     if (value === null || value.toString().trim() === "") {
       error = "This field is required";
-
     } else if (type === "number" && !/^\d+(\.\d+)?$/.test(value)) {
       error = "Only numbers are allowed";
-
     } else if (name === "mobile" && !/^\d{10}$/.test(value)) {
       error = "Enter a valid 10-digit number";
-
     } else if (name === "Vendor_Name" && !/^[a-zA-Z\s]+$/.test(value)) {
       error = "Only alphabets and spaces are allowed";
     }
@@ -224,31 +263,34 @@ export default function VoucherForm() {
           {/* Vendor ID Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Vendor ID <span className="text-red-500">*</span>
+              Vendor Name <span className="text-red-500">*</span>
             </label>
             <select
-              name="vandro_ID"
+              name="vender_id"
               required
-              value={formData.vandro_ID}
+              value={formData.vender_id}
               onChange={handleVendorChange}
-              className="mt-1 block w-full p-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
+              className="mt-1 block w-full p-3 text-base border-gray-300 
+             focus:outline-none focus:ring-indigo-500 
+             focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
             >
               <option value="" disabled>
-                -- Select an ID --
+                -- Select Vendor Name --
               </option>
               {vendorDetails.map((vendor) => (
                 <option key={vendor.v_id} value={vendor.v_id}>
-                  {vendor.v_id}
+                  {vendor.v_name}
                 </option>
               ))}
             </select>
-            {errors.vandro_ID && (
-              <p className="text-red-500 text-sm mt-1">{errors.vandro_ID}</p>
+
+            {errors.Vendor_Name && (
+              <p className="text-red-500 text-sm mt-1">{errors.Vendor_Name}</p>
             )}
           </div>
 
           {/* Vendor Name Input */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Vendor Name <span className="text-red-500">*</span>
             </label>
@@ -266,7 +308,7 @@ export default function VoucherForm() {
             {errors.Vendor_Name && (
               <p className="text-red-500 text-sm mt-1">{errors.Vendor_Name}</p>
             )}
-          </div>
+          </div> */}
 
           {/* Mobile Number */}
           <div>
