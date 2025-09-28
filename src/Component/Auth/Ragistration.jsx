@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import toast,{ Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 
 const Ragistration = () => {
@@ -19,29 +20,43 @@ const Ragistration = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  //   const handleLogin = ()=>{
-  //            if (formData) {
-  //           navigate('/');
-  //         }
-  //   }
-  const handleSubmit = (e) => {
-    e.preventDefault();
 
-    if (password === formData.a_paswd) {
-      console.log(formData);
-      setFormData({
-        a_name: "",
-        a_email: "",
-        a_mob_no: "",
-        a_paswd: "",
-        role: "",
+const handleSubmit = (e) => {
+  e.preventDefault();
+  setError(""); 
+
+  if (password === formData.a_paswd) {
+    console.log("Passwords Match. Registration Data:", formData);
+
+    //* Toast
+     toast.success("✅ Registration Successful! Go to login...", {
+        duration: 3000, 
+      }); 
+    // make an API call here.
+
+  
+    setFormData({
+      a_name: "",
+      a_email: "",
+      a_mob_no: "",
+      a_paswd: "",
+      role: "",
+    });
+    setPassword("");
+
+
+  } else {
+   
+    //* Toast
+     toast.error(" Password Dosn`t Match.", {
+        duration: 3000, 
       });
-    }
     setError("Password is not match");
-  };
-
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <Toaster/>
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Ragistration
@@ -98,6 +113,7 @@ const Ragistration = () => {
             <select
               name="role"
               onChange={handleChange}
+              value={formData.role}
               id="role"
               className="w-full p-2 bg-gray-100 border border-gray-200 rounded-md"
             >
