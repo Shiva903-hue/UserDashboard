@@ -2,6 +2,8 @@
 
 feat: Implement user authentication and basic banking feature
 
+Username : admin
+Password : password123
 
 Key updates include:
 
