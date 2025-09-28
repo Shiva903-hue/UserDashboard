@@ -4,7 +4,7 @@ export default function VoucherForm() {
   // --- STATE MANAGEMENT ---
   const [vendorDetails, setVendorDetails] = useState([]);
   const [formData, setFormData] = useState({
-    va_id: "",
+    // va_id: "",
     u_email: "",
     v_date: "",
     p_name: "",
@@ -12,9 +12,9 @@ export default function VoucherForm() {
     P_amount: "",
     P_quantity: "",
     mobile: "",
-    Vendor_Name: "",
+    vender_name: "",
     vender_id: "",
-    v_status: false,
+    v_status: "PENDING",
   });
 
   const [errors, setErrors] = useState({});
@@ -49,54 +49,7 @@ export default function VoucherForm() {
     validateField(name, value, type);
   };
 
-  //? Handle vendor chnages
-  // const handleVendorChange = (e) => {
-  //   const selectedName = e.target.value;
-
-  //   const selectedVendor = vendorDetails.find(
-  //     (vendor) => vendor.v_name.toString() === selectedName
-  //   );
-
-  //   if (selectedVendor) {
-  //     setFormData((prevData) => ({
-  //       ...prevData,
-  //       	vender_id: selectedVendor.vender_id,
-  //       Vendor_Name: selectedName,
-  //     }));
-  //     setErrors((prev) => ({ ...prev, vender_id: "", Vendor_Name: "" }));
-  //   } else {
-  //     setFormData((prevData) => ({
-  //       ...prevData,
-  //       	vender_id: "",
-  //       Vendor_Name: selectedName,
-  //     }));
-  //   }
-  // };
-
-  // Handle vendor changes
-  // const handleVendorChange = (e) => {
-  //   const selectedId = e.target.value;
-
-  //   const selectedVendor = vendorDetails.find(
-  //     (vendor) => vendor.v_id.toString() === selectedId
-  //   );
-
-  //   if (selectedVendor) {
-  //     setFormData((prevData) => ({
-  //       ...prevData,
-  //       vender_id: selectedVendor.v_id, // store ID
-  //       Vendor_Name: selectedVendor.v_name, // store Name
-  //     }));
-  //     setErrors((prev) => ({ ...prev, vender_id: "", Vendor_Name: "" }));
-  //   } else {
-  //     setFormData((prevData) => ({
-  //       ...prevData,
-  //       vender_id: "",
-  //       Vendor_Name: "",
-  //     }));
-  //   }
-  // };
-
+  //? Handle vendor chnage
   const handleVendorChange = (e) => {
     const selectedId = e.target.value;
 
@@ -108,9 +61,9 @@ export default function VoucherForm() {
       setFormData((prevData) => ({
         ...prevData,
         vender_id: selectedVendor.v_id, // ✅ store vendor ID (for backend)
-        Vendor_Name: selectedVendor.v_name, // optional (display only)
+        vender_name: selectedVendor.v_name, // optional (display only)
       }));
-      setErrors((prev) => ({ ...prev, vender_id: "" }));
+      setErrors((prev) => ({ ...prev, vender_name: "" }));
     }
   };
 
@@ -141,7 +94,7 @@ export default function VoucherForm() {
         alert("✅ Request sent successfully!");
 
         setFormData({
-          va_id: "",
+          // va_id: "",
           u_email: "",
           v_date: "",
           p_name: "",
@@ -149,7 +102,7 @@ export default function VoucherForm() {
           P_amount: "",
           P_quantity: "",
           mobile: "",
-          Vendor_Name: "",
+          vender_name: "",
           vender_id: "",
           v_status: false,
         });
@@ -194,7 +147,7 @@ export default function VoucherForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Voucher ID */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Voucher ID <span className="text-red-500">*</span>
             </label>
@@ -214,7 +167,7 @@ export default function VoucherForm() {
             {errors.va_id && (
               <p className="text-red-500 text-sm mt-1">{errors.va_id}</p>
             )}
-          </div>
+          </div> */}
 
           {/* User Email */}
           <div>
@@ -288,27 +241,6 @@ export default function VoucherForm() {
               <p className="text-red-500 text-sm mt-1">{errors.Vendor_Name}</p>
             )}
           </div>
-
-          {/* Vendor Name Input */}
-          {/* <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Vendor Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              name="Vendor_Name"
-              value={formData.Vendor_Name} // Value is now from formData
-              readOnly // This field is auto-filled
-              placeholder="Vendor Name"
-              required
-              className={`w-full p-3 border rounded-lg bg-gray-100 cursor-not-allowed ${
-                errors.Vendor_Name ? "border-red-500" : "border-gray-200"
-              }`}
-            />
-            {errors.Vendor_Name && (
-              <p className="text-red-500 text-sm mt-1">{errors.Vendor_Name}</p>
-            )}
-          </div> */}
 
           {/* Mobile Number */}
           <div>

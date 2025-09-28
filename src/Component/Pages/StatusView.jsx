@@ -10,7 +10,7 @@ export default function StatusView() {
   const fetchStatusData = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/requests");
+      const res = await fetch("http://localhost:5001/get/requests");
       const data = await res.json();
       setStatusData(data);
     } catch (error){ 
@@ -56,9 +56,9 @@ export default function StatusView() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {statusData.map((voucher) => (
-          <StatusCard key={voucher.id} voucherData={voucher} />
+          <StatusCard key={voucher.va_id} voucherData={voucher} />
         ))}
       </div>
 

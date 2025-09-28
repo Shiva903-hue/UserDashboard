@@ -1,17 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function WithdrawalForm() {
+  const [bankName, setBankName] = useState([]);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     u_email: "",
-    w_id: "",
+    // w_id: "",
     w_amount: "",
-    bank: "",
-    mode: "",
-    cheque_number: "",
-    cheque_date: "",
+    bank_select: "",
+    mode_withdraw: "",
+    // cheque_number: "",
+    // cheque_date: "",
   });
 
-  const [errors, setErrors] = useState({});
+  //* Fetch Bank Names form My Bank Table
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/get/mybankname");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setBankName(data);
+      } catch (e) {
+        console.error(
+          "Could not fetch bank data. Backend server might not be running: ",
+          e
+        );
+      }
+    };
+    fetchVouchers();
+  }, []);
 
   const validateField = (name, value) => {
     let error = "";
@@ -19,7 +39,8 @@ export default function WithdrawalForm() {
       error = "This field is required";
     } else {
       if (
-        ["w_id", "w_amount", "cheque_number"].includes(name) &&
+        //! w_id is removed form these
+        [ "w_amount", "cheque_number"].includes(name) &&
         !/^\d+$/.test(value)
       ) {
         error = "Only numbers are allowed";
@@ -27,7 +48,7 @@ export default function WithdrawalForm() {
       if (name === "u_email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
         error = "Invalid email format";
       }
-      if (name === "bank" && !/^[a-zA-Z\s]+$/.test(value)) {
+      if (name === "bank_select" && !/^[a-zA-Z\s]+$/.test(value)) {
         error = "Only alphabets are allowed";
       }
     }
@@ -49,7 +70,7 @@ export default function WithdrawalForm() {
     let isValid = true;
     Object.entries(formData).forEach(([name, value]) => {
       if (
-        formData.mode !== "Cheque" &&
+        formData.mode_withdraw !== "Cheque" &&
         (name === "cheque_number" || name === "cheque_date")
       ) {
         return; // Skip validation for hidden cheque fields
@@ -63,7 +84,7 @@ export default function WithdrawalForm() {
       alert("❌ Please fix validation errors before submitting.");
       return;
     }
-    console.log(formData)
+    console.log(formData);
     alert("✅ Withdrawal submitted successfully!");
   };
 
@@ -104,7 +125,8 @@ export default function WithdrawalForm() {
             Withdrawal Details
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
+            {/* w_id */}
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Withdrawal ID <span className="text-red-500">*</span>
               </label>
@@ -118,7 +140,7 @@ export default function WithdrawalForm() {
                 required
               />
               {renderError("w_id")}
-            </div>
+            </div> */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Amount <span className="text-red-500">*</span>
@@ -139,18 +161,22 @@ export default function WithdrawalForm() {
                 Select Bank <span className="text-red-500">*</span>
               </label>
               <select
-                name="bank"
-                value={formData.bank}
+                name="bank_select"
+                value={formData.bank_select}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               >
-                <option value="">Choose Bank</option>
-                <option value="HDFC">HDFC</option>
-                <option value="BOB">BOB</option>
-                <option value="SBI">SBI</option>
+                <option value="" disabled>
+                  -- Choose Bank --
+                </option>
+                {bankName.map((bank) => (
+                  <option key={bank.b_name} value={bank.b_name}>
+                    {bank.b_name}
+                  </option>
+                ))}
               </select>
-              {renderError("bank")}
+              {renderError("bank_select")}
             </div>
           </div>
           <div>
@@ -158,19 +184,19 @@ export default function WithdrawalForm() {
               Mode of Withdrawal <span className="text-red-500">*</span>
             </label>
             <select
-              name="mode"
-              value={formData.mode}
+              name="mode_withdraw"
+              value={formData.mode_withdraw}
               onChange={handleChange}
               className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option value="">Select Mode</option>
+              <option value=""> --Select Mode-- </option>
               <option value="Cash">Cash</option>
               <option value="Cheque">Cheque</option>
             </select>
-            {renderError("mode")}
+            {renderError("mode_withdraw")}
           </div>
-          {formData.mode === "Cheque" && (
+          {formData.mode_withdraw === "Cheque" && (
             <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

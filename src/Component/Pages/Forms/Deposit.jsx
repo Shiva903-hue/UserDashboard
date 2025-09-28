@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Deposit() {
+  const [bankName, setBankName] = useState([]);
   const [formData, setFormData] = useState({
     u_email: "",
-    ds_id: "",
+    // ds_id: "",
     d_amount: "",
-    bank: "",
-    mode: "",
+    bank: "", 
+    d_mode: "",
     cheque_number: "",
     cheque_date: "",
     dd_number: "",
@@ -27,80 +28,144 @@ export default function Deposit() {
   const [totalAmount, setTotalAmount] = useState(0);
   const [errors, setErrors] = useState({});
 
-  // Validation function
+  //* Fetch Bank Names form My Bank Table
+  useEffect(() => {
+    const fetchVouchers = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/get/mybankname");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setBankName(data);
+      } catch (e) {
+        console.error(
+          "Could not fetch bank data. Backend server might not be running: ",
+          e
+        );
+      }
+    };
+    fetchVouchers();
+  }, []);
+
+  //* Validation function
   const validateField = (name, value) => {
     let error = "";
-    if (!value) {
+    
+    // Check for general required field
+    if (value === "" || value === null || value === undefined) {
       error = "This field is required";
     } else {
+      // Validation for numeric fields
       if (
         [
-          "ds_id",
+          // "ds_id",
           "d_amount",
           "cheque_number",
           "dd_number",
           "dd_amount",
-        ].includes(name) &&
-        !/^\d+$/.test(value)
+        ].includes(name)
       ) {
-        error = "Only numbers are allowed";
+        // Allow only digits and ensure it's not a negative number
+        if (!/^\d+$/.test(value)) {
+           error = "Only non-negative numbers are allowed";
+        }
       }
+      
+      // Validation for email
       if (name === "u_email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
         error = "Invalid email format";
       }
-      if (name === "bank" && !/^[a-zA-Z\s]+$/.test(value)) {
-        error = "Only alphabets are allowed";
-      }
     }
+
     setErrors((prev) => ({ ...prev, [name]: error }));
     return error === "";
   };
 
+  //* handleChange
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     validateField(name, value);
   };
 
+  //* handleDenominationChange
   const handleDenominationChange = (note, count) => {
     const updatedNotes = { ...cashNotes, [note]: count };
     setCashNotes(updatedNotes);
 
     let total = 0;
     Object.entries(updatedNotes).forEach(([noteValue, noteCount]) => {
-      total += (parseInt(noteValue) || 0) * (parseInt(noteCount) || 0);
+      total += (parseInt(noteValue) || 0) * Math.max(0, (parseInt(noteCount) || 0));
     });
     setTotalAmount(total);
   };
 
-  const renderError = (name) =>
-    errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>;
-
-  const handleSubmit = (e) => {
+  //* HandleSubmit
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let isValid = true;
 
-    // Create a temporary list of required fields based on the mode
-    const requiredFields = { ...formData };
-    if (formData.mode !== "Cheque" && formData.mode !== "RTGS") {
-      delete requiredFields.cheque_number;
-      delete requiredFields.cheque_date;
+    // Define core required fields 
+    // ds_id is removed from thses
+    const requiredFields = ['u_email',  'd_amount', 'bank', 'd_mode'];
+    
+    // Add d_mode-specific required fields
+    if (formData.d_mode === "Cheque" || formData.d_mode === "RTGS") {
+        requiredFields.push('cheque_number', 'cheque_date');
+    } else if (formData.d_mode === "DD") {
+        requiredFields.push('dd_number', 'dd_date', 'dd_amount');
     }
-
-    Object.entries(requiredFields).forEach(([name, value]) => {
-      if (!validateField(name, value)) {
+    
+    // Validate all required fields
+    requiredFields.forEach((name) => {
+      if (!validateField(name, formData[name])) {
         isValid = false;
       }
     });
+    
+    // Additional Validation: If d_mode is Cash, totalAmount should match d_amount
+    if (formData.d_mode === "Cash" && parseFloat(formData.d_amount) !== totalAmount) {
+        setErrors(prev => ({ ...prev, d_amount: "Amount must match total cash denomination." }));
+        isValid = false;
+    }
+
 
     if (!isValid) {
       alert("Please fix validation errors before submitting.");
       return;
     }
-    console.log(formData)
+    
+      try {
+      const res = await fetch('http://localhost:3001/api/deposit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const msg = await res.text();
+      alert(msg);
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Failed to submit deposit');
+    }
+
+    // Print all data to console
+    // console.log("--- Deposit Form Submitted Data ---");
+    console.log("Form Data:", formData);
+    if (formData.d_mode === "Cash") {
+        console.log("Cash Denominations:", cashNotes);
+        console.log("Total Calculated Cash Amount:", totalAmount);
+    }
+    console.log("-----------------------------------");
+    
     alert("✅ Deposit submitted successfully!");
+
   };
 
+  const renderError = (name) =>
+    errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name]}</p>;
+    
   return (
     <div className="w-full bg-white p-4 sm:p-6 rounded-2xl shadow-xl">
       <div className="border-b border-gray-100 pb-4 mb-6">
@@ -138,7 +203,8 @@ export default function Deposit() {
             Deposit Details
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
+            {/* ds_id */}
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Deposit ID <span className="text-red-500">*</span>
               </label>
@@ -148,11 +214,11 @@ export default function Deposit() {
                 value={formData.ds_id}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter deposit ID"
+                placeholder="Enter deposit ID (Numbers only)"
                 required
               />
               {renderError("ds_id")}
-            </div>
+            </div> */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Amount <span className="text-red-500">*</span>
@@ -163,7 +229,7 @@ export default function Deposit() {
                 value={formData.d_amount}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter amount"
+                placeholder="Enter amount (Numbers only)"
                 required
               />
               {renderError("d_amount")}
@@ -179,10 +245,14 @@ export default function Deposit() {
                 className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               >
-                <option value="">Choose Bank</option>
-                <option value="HDFC">HDFC</option>
-                <option value="BOB">BOB</option>
-                <option value="SBI">SBI</option>
+                <option value="" disabled>
+                  -- Choose Bank --
+                </option>
+                {bankName.map((bank) => (
+                  <option key={bank.b_name} value={bank.b_name}>
+                    {bank.b_name}
+                  </option>
+                ))}
               </select>
               {renderError("bank")}
             </div>
@@ -192,22 +262,23 @@ export default function Deposit() {
               Mode of Deposit <span className="text-red-500">*</span>
             </label>
             <select
-              name="mode"
-              value={formData.mode}
+              name="d_mode"
+              value={formData.d_mode}
               onChange={handleChange}
               className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option value="">Select Mode</option>
+              <option value="">Select mode</option>
               <option value="Cash">Cash</option>
               <option value="Online">Online</option>
               <option value="Cheque">Cheque</option>
               <option value="RTGS">RTGS</option>
+              <option value="DD">DD</option>
             </select>
-            {renderError("mode")}
+            {renderError("d_mode")}
           </div>
 
-          {formData.mode === "Cash" && (
+          {formData.d_mode === "Cash" && (
             <div className="pt-4">
               <h4 className="text-sm font-semibold text-gray-700 mb-2">
                 Cash Denomination Breakdown
@@ -226,6 +297,7 @@ export default function Deposit() {
                       }
                       className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
                       min="0"
+                      placeholder="Count"
                     />
                   </div>
                 ))}
@@ -239,15 +311,15 @@ export default function Deposit() {
             </div>
           )}
 
-          {(formData.mode === "Cheque" || formData.mode === "RTGS") && (
+          {(formData.d_mode === "Cheque" || formData.d_mode === "RTGS") && (
             <div className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {formData.mode} Number <span className="text-red-500">*</span>
+                  {formData.d_mode} Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter Cheque Number"
+                  placeholder={`Enter ${formData.d_mode} Number (Numbers only)`}
                   name="cheque_number"
                   value={formData.cheque_number}
                   onChange={handleChange}
@@ -272,56 +344,61 @@ export default function Deposit() {
               </div>
             </div>
           )}
-        </div>
 
-        <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-          <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
-            Demand Draft (Optional)
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                DD Number
-              </label>
-              <input
-                type="text"
-                name="dd_number"
-                placeholder="Enter Number"
-                value={formData.dd_number}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
-              {renderError("dd_number")}
+          {formData.d_mode === "DD" && (
+            <div className="pt-4 space-y-4">
+              <h3 className="font-semibold text-gray-700 text-sm uppercase tracking-wide">
+                Demand Draft Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    DD Number <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="dd_number"
+                    placeholder="Enter DD Number (Numbers only)"
+                    value={formData.dd_number}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  {renderError("dd_number")}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    DD Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    name="dd_date"
+                    placeholder="DD Date"
+                    value={formData.dd_date}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  {renderError("dd_date")}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    DD Amount <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="dd_amount"
+                    placeholder="Enter DD Amount (Numbers only)"
+                    value={formData.dd_amount}
+                    onChange={handleChange}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                  {renderError("dd_amount")}
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                DD Date
-              </label>
-              <input
-                type="date"
-                name="dd_date"
-                placeholder="date"
-                value={formData.dd_date}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
-              {renderError("dd_date")}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                DD Amount
-              </label>
-              <input
-                type="text"
-                name="dd_amount"
-                placeholder="Enter Amount"
-                value={formData.dd_amount}
-                onChange={handleChange}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500"
-              />
-              {renderError("dd_amount")}
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="pt-4">

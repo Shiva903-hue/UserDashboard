@@ -1,96 +1,135 @@
-import { CheckCircle, Clock, XCircle } from "lucide-react";
+import { Calendar, CheckCircle, Clock, DollarSign, Hash, Package, User, User2, XCircle } from "lucide-react";
 
 export default function StatusCard({ voucherData }) {
-  let statusLabel, statusColor, statusIcon, bgcolor;
+  let statusLabel, statusColor, statusIcon, bgcolor,amountBg , boxbg , textColor ;
 
-  if (voucherData.status === null || voucherData.status === undefined) {
-    statusLabel = "Pending";
-    bgcolor = "bg-yellow-100 border-yellow-200";
-    statusColor = "bg-yellow-200 text-yellow-700 border-yellow-300";
+  if (voucherData.v_status === 'PENDING') {
+
+    statusLabel = "PENDING";
+    bgcolor = "bg-orange-200 border-orange-400";
+     amountBg = "bg-orange-300 text-orange-600";
+     boxbg = "bg-orange-300 border-orange-500";
+     textColor = "text-orange-700";
+    statusColor = "bg-orange-300 text-orange-700 border-orange-400";
     statusIcon = <Clock className="w-4 h-4 mr-1.5" />;
-  } else if (voucherData.status === true) {
-    statusLabel = "Approved";
-    bgcolor = "bg-green-50 border-green-200";
-    statusColor = "bg-green-100 text-green-800 border-green-300";
+
+  } else if (voucherData.v_status === 'APPROVED') {
+    statusLabel = "APPROVED";
+    bgcolor = "bg-green-200 border-green-400";
+      amountBg = "bg-green-300 text-green-600";
+         boxbg = "bg-green-300 border-green-500";
+     textColor = "text-greem-700";
+    statusColor = "bg-green-300 text-green-800 border-green-100";
     statusIcon = <CheckCircle className="w-4 h-4 mr-1.5" />;
-  } else if (voucherData.status === false) {
-    statusLabel = "Rejected";
-    bgcolor = "bg-red-50 border-red-200";
-    statusColor = "bg-red-100 text-red-800 border-red-300";
-    statusIcon = <XCircle className="w-4 h-4 mr-1.5" />;
-  } else {
-    // Fallback for any unexpected status values
-    statusLabel = "Pending";
-    bgcolor = "bg-yellow-100 border-yellow-200";
-    statusColor = "bg-yellow-200 text-yellow-700 border-yellow-300";
-    statusIcon = <Clock className="w-4 h-4 mr-1.5" />;
-  }
 
+  } else  {
+    statusLabel = "REJECTED";
+    bgcolor = "bg-red-200 border-red-400";
+    amountBg = "bg-red-300 text-red-600"
+       boxbg = "bg-red-300 border-red-500";
+     textColor = "text-red-700";
+    statusColor = "bg-red-300 text-red-800 border-red-400";
+    statusIcon = <XCircle className="w-4 h-4 mr-1.5" />;
+  } 
   return (
-    <div className={`rounded-lg border-2 p-6 ${bgcolor} shadow-md hover:shadow-lg transition-shadow duration-200`}>
+     <div className={`rounded-lg border ${bgcolor} p-4 h-full flex flex-col shadow-sm hover:shadow-md transition-shadow duration-200`}>
+
       {/* Header with Voucher ID and Status */}
-      <div className="flex justify-between items-start mb-4">
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-gray-500 mb-1">Voucher ID</span>
-          <span className="text-lg font-bold text-gray-900">{voucherData.voucherId}</span>
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex items-center gap-2">
+          <Hash className="w-4 h-4 text-gray-500" />
+          <div>
+            <div className="text-xs text-gray-500">Voucher ID</div>
+            <div className="font-bold text-lg text-gray-900">{voucherData.va_id}</div>
+          </div>
         </div>
-        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold border ${statusColor}`}>
+        <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${statusColor}`}>
           {statusIcon}
           {statusLabel}
         </span>
       </div>
 
-      {/* User ID */}
-      <div className="mb-3">
-        <span className="text-sm font-medium text-gray-500 block mb-1">User Email</span>
-        <span className="text-base text-gray-800 font-medium">{voucherData.userEmail}</span>
+      {/* Content Grid - 2x2 layout */}
+      <div className="grid grid-cols-2 gap-3 mb-3 flex-1">
+        
+        {/* User Email */}
+        <div className={`${boxbg}  rounded p-2 border`}>
+          <div className={`text-xs ${textColor} mb-1`}>User Email</div>
+          <div className="text-sm font-medium text-gray-800 truncate" title={voucherData.u_email}>
+            {voucherData.u_email}
+          </div>
+        </div>
+
+        {/* Product Name */}
+        <div className={`${boxbg}  rounded p-2 border`}>
+          <div className={`text-xs ${textColor} mb-1`}>Product Name</div>
+          <div className="text-sm font-medium text-gray-800 truncate" title={voucherData.p_name}>
+            {voucherData.p_name}
+          </div>
+        </div>
+
+        {/* Quantity */}
+        <div className={`${boxbg}  rounded p-2 border`}>
+          <div className={`text-xs ${textColor} mb-1`}>Quantity</div>
+          <div className="text-sm font-semibold text-gray-800">
+            {parseInt(voucherData.P_quantity).toLocaleString()}
+          </div>
+        </div>
+
+        {/* Rate */}
+        <div className={`${boxbg}  rounded p-2 border`}>
+          <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+            <DollarSign className="w-3 h-3" />
+            Rate
+          </div>
+          <div className="text-sm font-semibold text-gray-800">
+            {parseInt(voucherData.p_rate).toLocaleString()}
+          </div>
+        </div>
+
+        {/* vender Name */}
+        <div className={`${boxbg}  rounded p-2 border`}>
+          <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+            <User2 className="w-3 h-3" />
+            Vender Name
+          </div>
+          <div className="text-sm font-semibold text-gray-800">
+            {voucherData.vender_name}
+          </div>
+        </div>
       </div>
 
-      {/* Name */}
-       <div className="mb-4">
-        <span className="text-sm font-medium text-gray-500 block mb-1">Name</span>
-        <p className="text-base text-gray-700 leading-relaxed break-words overflow-wrap-anywhere max-h-32 overflow-y-auto">{voucherData.P_name}</p>
+      {/* Total Amount -  */}
+      <div className={`${amountBg} rounded p-2 mb-3`}>
+        <div className="text-xs opacity-90 mb-1 flex items-center gap-1">
+          <DollarSign className="w-3 h-3" />
+          Total Amount
+        </div>
+        <div className="text-lg font-bold">
+          {parseInt(voucherData.P_amount).toLocaleString()}
+        </div>
       </div>
 
-  {/* Quantity */}
-       <div className="mb-4">
-        <span className="text-sm font-medium text-gray-500 block mb-1">Quantity</span>
-        <p className="text-base text-gray-700 leading-relaxed break-words overflow-wrap-anywhere max-h-32 overflow-y-auto">{voucherData.P_quantity}</p>
-      </div>
-
-      {/* Rate */}
-       <div className="mb-4">
-        <span className="text-sm font-medium text-gray-500 block mb-1">Rate</span>
-        <p className="text-base text-gray-700 leading-relaxed break-words overflow-wrap-anywhere max-h-32 overflow-y-auto">{voucherData.P_rate}</p>
-      </div>
-
-      {/* Amount */}
-       <div className="mb-4">
-        <span className="text-sm font-medium text-gray-500 block mb-1">Amouny</span>
-        <p className="text-base text-gray-700 leading-relaxed break-words overflow-wrap-anywhere max-h-32 overflow-y-auto">{voucherData.P_amout}</p>
-      </div>
-
-    
-
-      {/* Approved Date */}
-      {voucherData.approvedDate && (
-        <div className="pt-3 border-t border-gray-200">
-          <span className="text-sm font-medium text-gray-500 block mb-1">
-            {voucherData.status === true ? "Approved Date" : 
-             voucherData.status === false ? "Rejected Date" : "Date"}
-          </span>
-          <span className="text-sm text-gray-600">
-            {new Date(voucherData.approvedDate).toLocaleString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              hour12: true,
-            })}
+      {/* Footer with Date */}
+      <div className="border-t border-gray-200 pt-2 mt-auto">
+        <div className="flex items-center gap-1 mb-1">
+          <Calendar className="w-3 h-3 text-gray-400" />
+          <span className="text-xs text-gray-500">
+            {voucherData.v_status === "APPROVED" ? "Approved Date" : 
+             voucherData.v_status === "REJECTED" ? "Rejected Date" : "Date"}
           </span>
         </div>
-      )}
+        <div className="text-xs text-gray-600 font-medium">
+          {new Date(voucherData.v_sysdate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric", 
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </div>
+      </div>
     </div>
   );
-}
+};

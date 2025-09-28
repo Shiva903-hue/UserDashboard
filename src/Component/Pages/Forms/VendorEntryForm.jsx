@@ -6,7 +6,7 @@ export default function VendorEntryForm({ setVendorForm }) {
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
     u_email: "",
-    v_id: "",
+    // v_id: "",
     v_name: "",
     v_GSTno: "",
     v_email: "",
@@ -27,7 +27,8 @@ export default function VendorEntryForm({ setVendorForm }) {
     if (!value) {
       error = "This field is required";
     } else {
-      if (["v_id", "phone_no", "b_accno"].includes(name) && !/^\d+$/.test(value)) {
+      //! v_id is removed for these
+      if ([ "phone_no", "b_accno"].includes(name) && !/^\d+$/.test(value)) {
         error = "Only numbers are allowed";
       }
       if (
@@ -81,7 +82,7 @@ export default function VendorEntryForm({ setVendorForm }) {
         alert("✅ Vendor created successfully!");
         setFormData({
           u_email: "",
-          v_id: "",
+          // v_id: "",
           v_name: "",
           v_GSTno: "",
           v_email: "",
@@ -159,7 +160,8 @@ export default function VendorEntryForm({ setVendorForm }) {
                 Vendor Details
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                {/* v_id */}
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Vendor ID <span className="text-red-500">*</span>
                   </label>
@@ -173,7 +175,7 @@ export default function VendorEntryForm({ setVendorForm }) {
                     value={formData.v_id}
                   />
                   {renderError("v_id")}
-                </div>
+                </div> */}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

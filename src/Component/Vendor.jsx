@@ -42,40 +42,40 @@ export default function Vendor() {
       address: "Pune, Maharashtra",
     },
     {
-    id: 6,
-    name: "Delhi Furniture House",
-    email: "delhifurniture@example.com",
-    phone: 9543210987,
-    address: "New Delhi",
-  },
-  {
-    id: 7,
-    name: "Techno World Computers",
-    email: "techworld@example.com",
-    phone: 9432109876,
-    address: "Bengaluru, Karnataka",
-  },
-  {
-    id: 8,
-    name: "Healthy Life Pharmacy",
-    email: "healthylife@example.com",
-    phone: 9321098765,
-    address: "Chennai, Tamil Nadu",
-  },
-  {
-    id: 9,
-    name: "Sunrise Travels",
-    email: "sunrise.travels@example.com",
-    phone: 9210987654,
-    address: "Jaipur, Rajasthan",
-  },
-  {
-    id: 10,
-    name: "Green Valley Nursery",
-    email: "greenvalley@example.com",
-    phone: 9109876543,
-    address: "Kolkata, West Bengal",
-  },
+      id: 6,
+      name: "Delhi Furniture House",
+      email: "delhifurniture@example.com",
+      phone: 9543210987,
+      address: "New Delhi",
+    },
+    {
+      id: 7,
+      name: "Techno World Computers",
+      email: "techworld@example.com",
+      phone: 9432109876,
+      address: "Bengaluru, Karnataka",
+    },
+    {
+      id: 8,
+      name: "Healthy Life Pharmacy",
+      email: "healthylife@example.com",
+      phone: 9321098765,
+      address: "Chennai, Tamil Nadu",
+    },
+    {
+      id: 9,
+      name: "Sunrise Travels",
+      email: "sunrise.travels@example.com",
+      phone: 9210987654,
+      address: "Jaipur, Rajasthan",
+    },
+    {
+      id: 10,
+      name: "Green Valley Nursery",
+      email: "greenvalley@example.com",
+      phone: 9109876543,
+      address: "Kolkata, West Bengal",
+    },
   ];
 
   return (
@@ -153,13 +153,15 @@ export default function Vendor() {
                   <td className="block md:table-cell px-2 md:px-6 py-3 md:py-4 whitespace-nowrap text-sm">
                     <div className="flex items-center justify-end gap-2 mt-4 md:mt-0">
                       <button
-                        type="button" disabled
+                        type="button"
+                        disabled
                         className="rounded-xl border border-gray-300 px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 shadow-sm w-full md:w-auto"
                       >
                         Update
                       </button>
                       <button
-                        type="button" disabled
+                        type="button"
+                        disabled
                         className="rounded-xl border border-gray-300 px-3 py-1.5 text-sm text-gray-500 hover:bg-gray-100 shadow-sm w-full md:w-auto"
                       >
                         Delete
