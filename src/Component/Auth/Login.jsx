@@ -18,42 +18,65 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-5">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300 px-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          Login
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Username */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Username</label>
+            <label className="block text-sm font-semibold text-gray-700">
+              Username <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your username"
             />
           </div>
+
+          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-semibold text-gray-700">
+              Password <span className="text-red-500">*</span>
+            </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="Enter your password"
             />
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          {/* Error Message */}
+          {error && (
+            <p className="text-red-600 text-sm font-medium text-center">
+              {error}
+            </p>
+          )}
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200 font-semibold"
           >
             Sign In
           </button>
         </form>
 
-        <Link to="/Ragistration">
-        <span className='text-blue-500  text-center'>Ragister Your self</span>
-        </Link>
+        {/* Registration Link */}
+        <div className="mt-6 text-center">
+          <Link to="/Ragistration" className="text-blue-600 hover:underline font-medium">
+            Register Yourself
+          </Link>
+        </div>
       </div>
     </div>
   );

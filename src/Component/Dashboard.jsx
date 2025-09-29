@@ -1,16 +1,11 @@
 //! 3
 import React, { useState } from "react";
-import {
-  Landmark,
-  Briefcase,
-  DollarSign,
-  CircleUserRoundIcon,
-  Handshake,
-} from "lucide-react";
+import { Landmark,DollarSign,Handshake}  from "lucide-react";
 import DailyTransaction from "./DailyTransiction";
 import Vendor from "./Vendor";
 import Account from "./Account";
 import school from '../assets/school.png'
+import { Link } from "react-router-dom";
 
 export default function Dashboard() {
   const [activeItem, setActiveItem] = useState("DailyTransaction");
@@ -79,9 +74,10 @@ export default function Dashboard() {
           </div>
 
           {/* LOGOUT */}
+          <Link to="/">
           <button className="py-2 px-5 border rounded-lg transition-all duration-200 text-sm font-medium hover:bg-red-200 text-red-500 border-red-500 bg-white hover:shadow-md ">
             LogOut
-          </button>
+          </button></Link>
         </nav>
 
         {/* Mobile Bottom Tab Navigation */}
