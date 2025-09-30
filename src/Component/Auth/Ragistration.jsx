@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
+import bgImg from "../../assets/bg.svg";
 
-const Ragistration = () => {
+export default function Ragistration() {
   const [formData, setFormData] = useState({
     a_name: "",
     a_email: "",
@@ -47,9 +48,12 @@ const Ragistration = () => {
   };
 
   return (
-    <div className="p-2 min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300 px-4">
+    <div   className=" min-h-screen flex flex-wrap justify-end  h-screen w-full bg-cover bg-center"
+  style={{ backgroundImage: `url(${bgImg})` }} >
       <Toaster />
-      <div className="w-full h-auto max-w-lg bg-white p-8 rounded-xl shadow-lg">
+
+
+      <div className="  w-full h-auto max-w-lg bg-white p-8  shadow-lg">
         <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
           Registration
         </h2>
@@ -176,8 +180,8 @@ const Ragistration = () => {
           </Link>
         </div>
       </div>
+    
+
     </div>
   );
-};
-
-export default Ragistration;
+}
