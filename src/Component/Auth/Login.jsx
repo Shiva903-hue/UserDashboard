@@ -77,14 +77,14 @@ const Login = () => {
           </form>
 
           {/* Registration Link */}
-          <div className="mt-6 text-center">
+          {/* <div className="mt-6 text-center">
             <Link
               to="/Ragistration"
               className="text-blue-600 hover:underline font-medium"
             >
               Register Yourself
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

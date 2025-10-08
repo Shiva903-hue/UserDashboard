@@ -81,7 +81,7 @@ export default function Dashboard() {
         </nav>
 
         {/* Mobile Bottom Tab Navigation */}
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.1)] border-t border-gray-200 flex justify-around items-center z-50">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white  border-t border-gray-200 flex justify-around items-center z-50">
 
           {navLinks.map((link) => {
             const Icon = link.icon;
@@ -112,7 +112,7 @@ export default function Dashboard() {
 
       {/* Main Content Section */}
       <section>
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 mt-0 pb-24 md:pb-8">
+        <main className="flex-1 mt-0 ">
           {/* Dynamic Component Rendering */}
           {renderComponent()}
         </main>

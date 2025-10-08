@@ -140,7 +140,7 @@ export default function VoucherForm() {
     <div className="w-full px-4 md:px-8 bg-white p-6 rounded-2xl shadow-xl">
       <div className="border-b border-gray-100 pb-4 mb-6">
         <h2 className="text-xl md:text-2xl font-bold text-gray-800">
-          Send Request
+          Purchase Voucher
         </h2>
       </div>
 
@@ -224,7 +224,7 @@ export default function VoucherForm() {
               value={formData.vender_id}
               onChange={handleVendorChange}
               className="mt-1 block w-full p-3 text-base border-gray-300 
-             focus:outline-none focus:ring-indigo-500 
+             focus:outline-none focus:ring-indigo-500  border
              focus:border-indigo-500 sm:text-sm rounded-md shadow-sm"
             >
               <option value="" disabled>
